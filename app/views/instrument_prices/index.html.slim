@@ -1,0 +1,28 @@
+.row.mb-2
+  .col
+    h1
+      | Listing prices for
+      =< link_to @instrument, @instrument
+
+table.table.table-striped.table-sm
+  thead
+    tr
+      th Instrument
+      th Date
+      th Price
+      th colspan=2
+
+  tbody
+    - @prices.each do |price|
+      tr
+        td = price.instrument
+        td = price.date
+        td = price.price
+        td = link_to edit_icon, [:edit, @instrument, price]
+        td = link_to remove_icon, [@instrument, price], data: { confirm: 'Are you sure?' }, method: :delete
+
+.row.mb-2
+  .col
+    => link_to 'Back', :instruments
+    | |
+    =< link_to 'New Instrument price', [:new, @instrument, :instrument_price]
