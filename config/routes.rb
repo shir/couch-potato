@@ -1,4 +1,3 @@
 Rails.application.routes.draw do
-  resources :instruments
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  resources :instruments , only: %i[index new create edit update destroy]
 end

@@ -1,16 +1,17 @@
-h1 Instruments
-table
+.row.mb-2
+  .col
+    h1 Instruments
+
+table.table.table-striped.table-sm
   thead
     tr
-      th
-        | Ticker
-      th[colspan="3"]
+      th Ticker
+      th colspan='3'
   tbody
     - @instruments.each do |instrument|
       tr
         td= instrument.ticker
-        td= link_to 'Show', instrument
-        td= link_to 'Edit', edit_instrument_path(instrument)
-        td= link_to 'Destroy', instrument, method: :delete, data: { confirm: 'Are you sure?' }
+        td= link_to edit_icon, edit_instrument_path(instrument)
+        td= link_to remove_icon, instrument, method: :delete, data: { confirm: 'Are you sure?' }
 br
 = link_to 'New Instrument', new_instrument_path

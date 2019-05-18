@@ -5,9 +5,6 @@ class InstrumentsController < ApplicationController
     @instruments = Instrument.all
   end
 
-  def show
-  end
-
   def new
     @instrument = Instrument.new
   end
@@ -19,7 +16,7 @@ class InstrumentsController < ApplicationController
     @instrument = Instrument.new(instrument_params)
 
     if @instrument.save
-      redirect_to @instrument, notice: 'Instrument was successfully created.'
+      redirect_to :instruments, notice: 'Instrument was successfully created.'
     else
       render :new
     end
@@ -27,7 +24,7 @@ class InstrumentsController < ApplicationController
 
   def update
     if @instrument.update(instrument_params)
-      redirect_to @instrument, notice: 'Instrument was successfully updated.'
+      redirect_to :instruments, notice: 'Instrument was successfully updated.'
     else
       render :edit
     end
@@ -36,7 +33,7 @@ class InstrumentsController < ApplicationController
   def destroy
     @instrument.destroy
 
-    redirect_to instruments_url, notice: 'Instrument was successfully destroyed.'
+    redirect_to :instruments, notice: 'Instrument was successfully destroyed.'
   end
 
   private
