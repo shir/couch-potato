@@ -1,0 +1,21 @@
+.row.mb-2
+  .col
+    h1 Amounts
+
+table.table.table-striped.table-sm
+  thead
+    tr
+      th Date
+      - @instruments.each do |i|
+        th= i
+  tbody
+    - @dates.each do |date|
+      - @amounts = InstrumentAmount.where(date: date).index_by(&:instrument_id)
+      tr
+        th= date
+        - @instruments.each do |i|
+          td
+            - if (price = @amounts[i.id])
+              = link_to number_with_delimiter(amount.amount), [:edit, i, amount]
+            - else
+              = link_to '+', [:new, i, :instrument_amount]
