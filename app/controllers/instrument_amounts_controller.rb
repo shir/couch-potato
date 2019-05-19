@@ -1,8 +1,11 @@
 class InstrumentAmountsController < ApplicationController
+  CHART_START_DATE = Date.parse('2018-12-14').freeze
+  
   before_action :set_instrument, only: %i[new create edit update destroy]
   before_action :set_amount, only: %i[edit update destroy]
 
   def index
+    @chart_data = InstrumentPricesChart.result(start_date: CHART_START_DATE)
     @dates = InstrumentAmount.distinct.order(date: :desc).pluck(:date)
     @instruments = Instrument.all
   end
@@ -25,7 +28,7 @@ class InstrumentAmountsController < ApplicationController
   end
 
   def update
-    if @amount.update(price_params)
+    if @amount.update(amount_params)
       redirect_to :instrument_amounts, notice: 'Instrument amount was successfully updated.'
     else
       render :edit
@@ -48,6 +51,6 @@ class InstrumentAmountsController < ApplicationController
   end
 
   def amount_params
-    params.require(:instrument_amount).permit(:date, :amount)
+    params.require(:instrument_amount).permit(:date, :count, :price)
   end
 end

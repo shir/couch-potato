@@ -2,6 +2,10 @@
   .col
     h1 Amounts
 
+.row.mb-2
+  .col
+    = line_chart @chart_data, min: nil
+
 table.table.table-striped.table-sm
   thead
     tr
@@ -16,6 +20,6 @@ table.table.table-striped.table-sm
         - @instruments.each do |i|
           td
             - if (amount = @amounts[i.id])
-              = link_to number_with_delimiter(amount.amount), [:edit, i, amount]
+              = link_to number_with_delimiter(amount.count), [:edit, i, amount]
             - else
               = link_to '+', [:new, i, :instrument_amount]
