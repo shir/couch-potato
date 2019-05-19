@@ -1,9 +1,10 @@
 class InstrumentPricesController < ApplicationController
-  before_action :set_instrument
+  before_action :set_instrument, only: %i[new create edit update destroy]
   before_action :set_price, only: %i[edit update destroy]
 
   def index
-    @prices = @instrument.prices.order(date: :desc)
+    @dates = InstrumentPrice.distinct.order(date: :desc).pluck(:date)
+    @instruments = Instrument.all
   end
 
   def new
@@ -17,7 +18,7 @@ class InstrumentPricesController < ApplicationController
     @price = @instrument.prices.build(price_params)
 
     if @price.save
-      redirect_to [@instrument, :instrument_prices], notice: 'Instrument price was successfully created.'
+      redirect_to :instrument_prices, notice: 'Instrument price was successfully created.'
     else
       render :new
     end
@@ -25,7 +26,7 @@ class InstrumentPricesController < ApplicationController
 
   def update
     if @price.update(price_params)
-      redirect_to [@instrument, :instrument_prices], notice: 'Instrument price was successfully updated.'
+      redirect_to :instrument_prices, notice: 'Instrument price was successfully updated.'
     else
       render :edit
     end
@@ -33,7 +34,7 @@ class InstrumentPricesController < ApplicationController
 
   def destroy
     @price.destroy
-    redirect_to [@instrument, :instrument_prices], notice: 'Instrument price was successfully destroyed.'
+    redirect_to :instrument_prices, notice: 'Instrument price was successfully destroyed.'
   end
 
   private

@@ -1,0 +1,16 @@
+nav.navbar.navbar-expand-md.navbar-light.bg-light
+  = link_to 'Couch-Potato', root_path, class: 'navbar-brand'
+  button.navbar-toggler[
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  ]
+    span.navbar-toggler-icon"
+
+  div#navbarSupportedContent.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li.nav-item
+        = link_to 'Prices', :instrument_prices, class: 'nav-link'

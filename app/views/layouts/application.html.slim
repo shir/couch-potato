@@ -11,6 +11,7 @@ html
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
     = stylesheet_pack_tag 'stylesheets', media: 'all', 'data-turbolinks-track': 'reload'
   body
+    = render 'shared/layout/header'
     .container-fluid
       #flash_messages
         = alert
