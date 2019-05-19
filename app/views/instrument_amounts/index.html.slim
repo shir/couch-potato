@@ -2,24 +2,26 @@
   .col
     h1 Amounts
 
-.row.mb-2
-  .col
-    = line_chart @chart_data, min: nil
-
 table.table.table-striped.table-sm
   thead
     tr
       th Date
       - @instruments.each do |i|
-        th= i
+        th.text-center= i
   tbody
     - @dates.each do |date|
       - @amounts = InstrumentAmount.where(date: date).index_by(&:instrument_id)
       tr
-        th= date
+        th.text-nowrap=l date
         - @instruments.each do |i|
-          td
-            - if (amount = @amounts[i.id])
-              = link_to number_with_delimiter(amount.count), [:edit, i, amount]
-            - else
+          - if (amount = @amounts[i.id])
+            td.text-nowrap.text-right[
+              data-toggle='tooltip'
+              data-html='true'
+              data-delay='{"show": 500, "hide": 0}'
+              title="Count: #{number_with_delimiter(amount.count)}<br />Price: #{humanized_money_with_symbol(amount.price)}"
+            ]
+              = link_to humanized_money_with_symbol(amount.total), [:edit, i, amount]
+          - else
+            td.text-center
               = link_to '+', [:new, i, :instrument_amount]

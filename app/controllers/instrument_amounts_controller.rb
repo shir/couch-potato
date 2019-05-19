@@ -1,11 +1,8 @@
 class InstrumentAmountsController < ApplicationController
-  CHART_START_DATE = Date.parse('2018-12-14').freeze
-  
   before_action :set_instrument, only: %i[new create edit update destroy]
   before_action :set_amount, only: %i[edit update destroy]
 
   def index
-    @chart_data = InstrumentPricesChart.result(start_date: CHART_START_DATE)
     @dates = InstrumentAmount.distinct.order(date: :desc).pluck(:date)
     @instruments = Instrument.all
   end

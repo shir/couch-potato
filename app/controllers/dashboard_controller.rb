@@ -1,6 +1,7 @@
 class DashboardController < ApplicationController
+  PRICE_CHART_START_DATE = Date.parse('2018-12-14').freeze
+
   def show
-    @dates = InstrumentPrice.distinct.order(date: :desc).pluck(:date)
-    @instruments = Instrument.all
+    @prices_chart_data = InstrumentPricesChart.result
   end
 end
