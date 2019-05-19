@@ -11,3 +11,7 @@ Turbolinks.start();
 
 window.Chartkick = Chartkick;
 Chartkick.addAdapter(Chart);
+
+$(document).on('turbolinks:load', () => {
+  $('[data-toggle="tooltip"]').tooltip();
+})
