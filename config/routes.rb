@@ -3,5 +3,5 @@ Rails.application.routes.draw do
     resources :instrument_prices, only: %i[index new create edit update destroy], path: :prices
   end
 
-  root 'instruments#index'
+  root 'dashboard#show'
 end
