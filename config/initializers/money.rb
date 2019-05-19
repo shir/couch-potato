@@ -1,6 +1,6 @@
 # encoding : utf-8
 
-Money.locale_backend = nil
+Money.locale_backend = :i18n
 
 MoneyRails.configure do |config|
 
@@ -83,7 +83,8 @@ MoneyRails.configure do |config|
     no_cents_if_whole: false,
     sign_before_symbol: false,
     thousands_separator: ' ',
-    decimal_mark: ','
+    decimal_mark: ',',
+    symbol_position: :after,
   }
 
   # Set default raise_error_on_money_parsing option
