@@ -21,7 +21,7 @@ table.table.table-striped.table-sm
               data-delay='{"show": 500, "hide": 0}'
               title="Count: #{number_with_delimiter(amount.count)}<br />Price: #{humanized_money_with_symbol(amount.price)}"
             ]
-              = link_to humanized_money_with_symbol(amount.total), [:edit, i, amount]
+              = link_to humanized_money_with_symbol(amount.total), [:edit, amount]
           - else
             td.text-center
               = link_to '+', [:new, i, :instrument_amount]

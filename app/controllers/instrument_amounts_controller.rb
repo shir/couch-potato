@@ -1,5 +1,5 @@
 class InstrumentAmountsController < ApplicationController
-  before_action :set_instrument, only: %i[new create edit update destroy]
+  before_action :set_instrument, only: %i[new create]
   before_action :set_amount, only: %i[edit update destroy]
 
   def index
@@ -44,7 +44,7 @@ class InstrumentAmountsController < ApplicationController
   end
 
   def set_amount
-    @amount = @instrument.amounts.find(params[:id])
+    @amount = InstrumentAmount.find(params[:id])
   end
 
   def amount_params

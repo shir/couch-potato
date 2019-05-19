@@ -1,10 +1,10 @@
 .row.mb-2
   .col
-    h1 Editing Amount
+    h1 Editing amount for "#{@amount.instrument}"
 
 .row.mb-2
   .col
-    = render 'form', instrument: @instrument, amount: @amount
+    = render 'form', instrument: nil, amount: @amount
 
 .row.mb-2
   .col
