@@ -15,7 +15,7 @@ table.table.table-striped.table-sm
         th= date
         - @instruments.each do |i|
           td
-            - if (price = @amounts[i.id])
+            - if (amount = @amounts[i.id])
               = link_to number_with_delimiter(amount.amount), [:edit, i, amount]
             - else
               = link_to '+', [:new, i, :instrument_amount]

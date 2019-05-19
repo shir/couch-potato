@@ -1,0 +1,12 @@
+.row.mb-2
+  .col
+    h1 Editing Amount
+
+.row.mb-2
+  .col
+    = render 'form', instrument: @instrument, amount: @amount
+
+.row.mb-2
+  .col
+    = link_to 'Back', :instrument_amounts
+

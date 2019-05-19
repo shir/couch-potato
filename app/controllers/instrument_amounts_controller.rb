@@ -43,7 +43,7 @@ class InstrumentAmountsController < ApplicationController
     @instrument = Instrument.find(params[:instrument_id])
   end
 
-  def set_price
+  def set_amount
     @amount = @instrument.amounts.find(params[:id])
   end
 
