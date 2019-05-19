@@ -16,9 +16,11 @@ class ImportInstrumentPrices < BaseService
         instrument = instruments[column]
         next unless instrument
 
-        price = instrument.prices.find_or_initialize_by(date: date)
-        price.price = parse_price(value)
-        price.save!
+        amount = instrument.amounts.find_or_initialize_by(date: date) do |a|
+          a.count = 0
+        end
+        amount.price = parse_price(value)
+        amount.save!
       end
     end
   end
