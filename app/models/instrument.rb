@@ -6,6 +6,8 @@ class Instrument < ApplicationRecord
   validates :ticker, presence: true
   validates :currency, presence: true, inclusion: { in: CURRENCIES }
 
+  scope :visible, ->{ where(hidden: false) }
+
   def to_s
     ticker
   end

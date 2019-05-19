@@ -10,7 +10,7 @@ table.table.table-striped.table-sm
       th colspan=2
   tbody
     - @instruments.each do |instrument|
-      tr
+      tr class=('text-muted' if instrument.hidden?)
         td= instrument.ticker
         td= instrument.currency
         td= link_to edit_icon, edit_instrument_path(instrument)

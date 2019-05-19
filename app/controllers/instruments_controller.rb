@@ -43,6 +43,6 @@ class InstrumentsController < ApplicationController
   end
 
   def instrument_params
-    params.require(:instrument).permit(:ticker, :currency)
+    params.require(:instrument).permit(:ticker, :currency, :hidden)
   end
 end

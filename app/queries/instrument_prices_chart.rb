@@ -8,7 +8,7 @@ class InstrumentPricesChart < BaseQuery
   end
 
   def result
-    Instrument.all.map do |instrument|
+    Instrument.visible.map do |instrument|
       {
         name: instrument.ticker,
         data: data(instrument)
