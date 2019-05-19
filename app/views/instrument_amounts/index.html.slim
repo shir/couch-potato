@@ -6,13 +6,19 @@ table.table.table-striped.table-sm
   thead
     tr
       th Date
+      - ExchangeRate::CURRENCIES.each do |c|
+        th.text-center= c
       - @instruments.each do |i|
         th.text-center= i
   tbody
     - @dates.each do |date|
-      - @amounts = InstrumentAmount.where(date: date).index_by(&:instrument_id)
+      - @amounts = InstrumentAmount.includes(:instrument).where(date: date).index_by(&:instrument_id)
       tr
         th.text-nowrap=l date
+        - ExchangeRate::CURRENCIES.each do |c|
+          td.text-nowrap.text-right
+            - if (rate = @rates[date])
+              = number_with_precision(rate.usd, precision: 2)
         - @instruments.each do |i|
           - if (amount = @amounts[i.id])
             td.text-nowrap.text-right[

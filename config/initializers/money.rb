@@ -84,7 +84,7 @@ MoneyRails.configure do |config|
     sign_before_symbol: false,
     thousands_separator: ' ',
     decimal_mark: ',',
-    symbol_position: :after,
+    format: '%n %u',
   }
 
   # Set default raise_error_on_money_parsing option

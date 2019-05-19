@@ -21,9 +21,9 @@ class InstrumentPricesChart < BaseQuery
   def data(instrument)
     amounts = instrument.amounts.order(date: :asc)
     amounts = amounts.where('"instrument_amounts"."date" >= ?', start_date) if start_date.present?
-    first_amount = amounts.first
+    first_amount = amounts.to_a.first
     base = Money.from_amount(BASE, instrument.currency).to_f
-    amounts.each_with_object({}) do |amount, d|
+    amounts.to_a.each_with_object({}) do |amount, d|
       d[amount.date] = (amount.absolute_price.to_f * base / first_amount.absolute_price.to_f).round(2)
     end
   end

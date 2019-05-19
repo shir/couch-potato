@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_19_110825) do
+ActiveRecord::Schema.define(version: 2019_05_19_113929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "exchange_rates", force: :cascade do |t|
+    t.date "date", null: false
+    t.jsonb "rates", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_exchange_rates_on_date", unique: true
+  end
 
   create_table "instrument_amounts", force: :cascade do |t|
     t.bigint "instrument_id", null: false

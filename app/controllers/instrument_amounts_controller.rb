@@ -4,6 +4,7 @@ class InstrumentAmountsController < ApplicationController
 
   def index
     @dates = InstrumentAmount.distinct.order(date: :desc).pluck(:date)
+    @rates = ExchangeRate.where(date: @dates).index_by(&:date)
     @instruments = Instrument.all
   end
 
