@@ -1,6 +1,8 @@
 .row.mb-2
   .col
     h1 Amounts
+  .col-auto.align-self-center
+    = link_to 'Add Amount', [:new, :date_amount], class: 'btn btn-secondary'
 
 table.table.table-striped.table-sm
   thead

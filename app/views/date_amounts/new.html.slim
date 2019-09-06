@@ -1,0 +1,11 @@
+.row.mb-2
+  .col
+    h1 New Amounts for #{l @date_amount.date}
+
+.row.mb-2
+  .col
+    = render 'form', date_amount: @date_amount
+
+.row.mb-2
+  .col
+    = link_to 'Back', :instrument_amounts

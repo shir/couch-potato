@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstrumentAmount < ApplicationRecord
   SPLITS = {
     'FXRU' => {
@@ -13,7 +15,15 @@ class InstrumentAmount < ApplicationRecord
 
   monetize :price_cents, with_model_currency: :currency
 
-  delegate :currency, to: :instrument
+  delegate :currency, to: :instrument, allow_nil: true
+
+  scope :prev, ->(date){ where('"instrument_amounts"."date" < ?', date).order }
+
+  class << self
+    def prev_date(date)
+      where('"instrument_amounts"."date" < ?', date).order(date: :desc).first&.date
+    end
+  end
 
   def total
     price * count
@@ -27,6 +37,7 @@ class InstrumentAmount < ApplicationRecord
 
     split = SPLITS[instrument.ticker]
     return price if date >= split[:date]
+
     return price / split[:divide]
   end
 end

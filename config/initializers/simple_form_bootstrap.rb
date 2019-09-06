@@ -216,7 +216,7 @@ SimpleForm.setup do |config|
   config.wrappers :horizontal_multi_select, tag: 'div', class: 'form-group row', error_class: 'form-group-invalid', valid_class: 'form-group-valid' do |b|
     b.use :html5
     b.optional :readonly
-    b.use :label, class: 'col-sm-3 control-label'
+    b.use :label, class: 'col-sm-3 col-form-label'
     b.wrapper :grid_wrapper, tag: 'div', class: 'col-sm-9' do |ba|
       ba.wrapper tag: 'div', class: 'd-flex flex-row justify-content-between align-items-center' do |bb|
         bb.use :input, class: 'form-control mx-1', error_class: 'is-invalid'

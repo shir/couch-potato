@@ -1,0 +1,20 @@
+= simple_form_for(date_amount, wrapper: :horizontal_form,
+  wrapper_mappings: { date: :horizontal_multi_select }) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    = f.input :date, as: :date
+    - ExchangeRate::CURRENCIES.each do |currency|
+      = f.input date_amount.rate_name(currency), label: currency
+    - date_amount.instruments.each do |instrument|
+      .row
+        .col-sm-3
+          legend.col-form-label= instrument.ticker
+        .col
+          = f.input date_amount.count_name(instrument.ticker), label: 'Count'
+          = f.input date_amount.price_name(instrument.ticker), label: 'Price'
+
+  .form-actions.row
+    .col-sm.offset-sm-3
+      = f.button :submit, class: 'btn btn-primary'
