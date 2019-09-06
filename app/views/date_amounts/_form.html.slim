@@ -6,14 +6,18 @@
   .form-inputs
     = f.input :date, as: :date
     - ExchangeRate::CURRENCIES.each do |currency|
-      = f.input date_amount.rate_name(currency), label: currency
+      = f.input date_amount.rate_name(currency), label: currency,
+        input_html: { class: 'text-right' }
     - date_amount.instruments.each do |instrument|
       .row
         .col-sm-3
           legend.col-form-label= instrument.ticker
-        .col
-          = f.input date_amount.count_name(instrument.ticker), label: 'Count'
-          = f.input date_amount.price_name(instrument.ticker), label: 'Price'
+        .col-sm-4
+          = f.input date_amount.count_name(instrument.ticker), label: 'Count',
+            input_html: { class: 'text-right' }
+        .col-sm-5
+          = f.input date_amount.price_name(instrument.ticker), label: 'Price',
+            input_html: { class: 'text-right' }
 
   .form-actions.row
     .col-sm.offset-sm-3
