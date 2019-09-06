@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  resources :accounts, only: %i[index new create edit update destroy]
   resources :instruments, only: %i[index new create edit update destroy] do
     resources :instrument_amounts, only: %i[new create], path: :amounts
   end

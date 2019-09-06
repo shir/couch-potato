@@ -1,0 +1,8 @@
+.row.mb-2
+  .col
+    h1 Edit account "#{@account}"
+
+.row.mb-2
+  .col
+    = render 'form', account: @account
+    = link_to 'Back', accounts_path
