@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstrumentAmountsController < ApplicationController
   before_action :set_instrument, only: %i[new create]
   before_action :set_amount, only: %i[edit update destroy]
@@ -19,7 +21,7 @@ class InstrumentAmountsController < ApplicationController
     @amount = @instrument.amounts.build(amount_params)
 
     if @amount.save
-      redirect_to :instrument_amounts, notice: 'Instrument amount was successfully created.'
+      redirect_to date_amounts_path, notice: 'Instrument amount was successfully created.'
     else
       render :new
     end
@@ -27,7 +29,7 @@ class InstrumentAmountsController < ApplicationController
 
   def update
     if @amount.update(amount_params)
-      redirect_to :instrument_amounts, notice: 'Instrument amount was successfully updated.'
+      redirect_to date_amounts_path, notice: 'Instrument amount was successfully updated.'
     else
       render :edit
     end
@@ -35,7 +37,7 @@ class InstrumentAmountsController < ApplicationController
 
   def destroy
     @amount.destroy
-    redirect_to :instrument_amounts, notice: 'Instrument amount was successfully destroyed.'
+    redirect_to date_amounts_path, notice: 'Instrument amount was successfully destroyed.'
   end
 
   private

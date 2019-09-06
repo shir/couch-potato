@@ -1,0 +1,19 @@
+.row.mb-2
+  .col
+    h1 Amounts
+  .col-auto.align-self-center
+    = link_to 'Add Amount', [:new, :date_amount], class: 'btn btn-secondary'
+
+table.table.table-striped.table-sm
+  thead
+    tr
+      th Date
+      - ExchangeRate::CURRENCIES.each do |c|
+        th.text-center= c
+      - @instruments.each do |i|
+        th.text-center= i
+  tbody
+    - @dates.each do |date|
+      = render 'date_amount_row',
+        date_amount: @date_amounts[date],
+        instruments: @instruments

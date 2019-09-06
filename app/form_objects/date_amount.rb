@@ -7,8 +7,7 @@ class DateAmount < ApplicationFormObject
 
   def initialize(params = {})
     define_rate_methods
-    define_count_methods
-    define_price_methods
+    define_amount_methods
 
     super convert_date_params(params, :date)
   end
@@ -17,34 +16,18 @@ class DateAmount < ApplicationFormObject
     return unless date
 
     fill_rates_from(date_amount)
-    fill_counts_and_prices_from(date_amount)
+    fill_amounts_from(date_amount)
   end
 
   def instruments
     @instruments ||= Instrument.visible
   end
 
-  def tickers
-    @tickers ||= instruments.map(&:ticker)
-  end
-
-  def instrument_amounts
-    @instrument_amounts ||= InstrumentAmount
+  def amounts
+    @amounts ||= InstrumentAmount
       .where(date: date)
       .includes(:instrument)
       .index_by{ |ia| ia.instrument.ticker }
-  end
-
-  def counts
-    @counts ||= tickers.each_with_object({}) do |t, c|
-      c[t] = instrument_amounts[t]&.count
-    end
-  end
-
-  def prices
-    @prices ||= tickers.each_with_object({}) do |t, p|
-      p[t] = instrument_amounts[t]&.price
-    end
   end
 
   def rates
@@ -68,15 +51,11 @@ class DateAmount < ApplicationFormObject
     er.rates = rates
     er.save
 
-    instruments.each do |instrument|
-      count = counts[instrument.ticker]
-      price = prices[instrument.ticker]
-      next if count.blank? || price.blank?
+    amounts.each do |_ticker, amount|
+      amount.date = date
+      next if amount.save
 
-      ia = InstrumentAmount.find_or_initialize_by(instrument: instrument, date: date)
-      ia.count = count
-      ia.price = price
-      ia.save
+      Rails.logger.error "Error on save amount #{amount.inspect}: #{amount.errors.full_messages.inspect}"
     end
   end
 
@@ -95,30 +74,35 @@ class DateAmount < ApplicationFormObject
     end
   end
 
-  def define_count_methods
-    tickers.each do |ticker|
-      self.class.define_method(
-        count_name(ticker),
-        proc{ counts[ticker] }
-      )
-      self.class.define_method(
-        "#{count_name(ticker)}=",
-        proc{ |count| counts[ticker] = count }
-      )
+  def define_amount_methods # rubocop:disable Metrics/AbcSize
+    instruments.each do |instrument|
+      self.class.define_method(count_name(instrument.ticker), count_getter(instrument))
+      self.class.define_method("#{count_name(instrument.ticker)}=", count_setter(instrument))
+      self.class.define_method(price_name(instrument.ticker), price_getter(instrument))
+      self.class.define_method("#{price_name(instrument.ticker)}=", price_setter(instrument))
     end
   end
 
-  def define_price_methods
-    tickers.each do |ticker|
-      self.class.define_method(
-        price_name(ticker),
-        proc{ prices[ticker] }
-      )
-      self.class.define_method(
-        "#{price_name(ticker)}=",
-        proc{ |price| prices[ticker] = price }
-      )
-    end
+  def count_getter(instrument)
+    proc{ amounts[instrument.ticker]&.count }
+  end
+
+  def count_setter(instrument)
+    proc{ |count|
+      amount = amounts[instrument.ticker] ||= instrument.amounts.build
+      amount.count = count
+    }
+  end
+
+  def price_getter(instrument)
+    proc{ amounts[instrument.ticker]&.price }
+  end
+
+  def price_setter(instrument)
+    proc{ |price|
+      amount = amounts[instrument.ticker] ||= instrument.amounts
+      amount.price = price
+    }
   end
 
   def fill_rates_from(date_amount)
@@ -129,12 +113,14 @@ class DateAmount < ApplicationFormObject
     end
   end
 
-  def fill_counts_and_prices_from(date_amount)
-    tickers.each do |ticker|
-      next if counts[ticker]
+  def fill_amounts_from(date_amount)
+    instruments.each do |instrument|
+      next unless (da = date_amount.amounts[instrument.ticker])
 
-      counts[ticker] = date_amount.counts[ticker]
-      prices[ticker] = date_amount.prices[ticker]
+      amounts[instrument.ticker] ||= instrument.amounts.build(
+        count: da.count,
+        price: da.price,
+      )
     end
   end
 

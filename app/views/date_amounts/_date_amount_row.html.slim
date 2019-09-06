@@ -1,0 +1,18 @@
+tr id=dom_id(date_amount)
+  th.text-nowrap=l date_amount.date
+  - ExchangeRate::CURRENCIES.each do |c|
+    td.text-nowrap.text-right
+      - if (rate = date_amount.rates[c])
+        = number_with_precision(rate, precision: 2)
+  - @instruments.each do |i|
+    - if (amount = date_amount.amounts[i.ticker])
+      td.text-nowrap.text-right[
+        data-toggle='tooltip'
+        data-html='true'
+        data-delay='{"show": 500, "hide": 0}'
+        title="Count: #{number_with_delimiter(amount.count)}<br />Price: #{humanized_money_with_symbol(amount.price)}"
+      ]
+        = link_to humanized_money_with_symbol(amount.total), edit_instrument_amount_path(amount)
+    - else
+      td.text-center
+        = link_to '+', [:new, i, :instrument_amount]

@@ -5,10 +5,9 @@ Rails.application.routes.draw do
     resources :balances, except: %i[show], shallow: true
   end
   resources :instruments, only: %i[index new create edit update destroy] do
-    resources :instrument_amounts, only: %i[new create], path: :amounts
+    resources :instrument_amounts, except: %i[index show], path: :amounts, shallow: true
   end
-  resources :instrument_amounts, only: %i[index edit update destroy]
-  resources :date_amounts, only: %i[new create]
+  resources :date_amounts, only: %i[index new create]
 
   root 'dashboard#show'
 end

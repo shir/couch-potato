@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class DateAmountsController < ApplicationController
+  def index
+    @dates = InstrumentAmount.distinct.order(date: :desc).pluck(:date)
+    @date_amounts = @dates.each_with_object({}){ |date, da| da[date] = DateAmount.new(date: date) }
+    @instruments = Instrument.visible
+  end
+
   def new
     @date_amount = DateAmount.new(date: Time.zone.today)
 
@@ -13,7 +19,7 @@ class DateAmountsController < ApplicationController
     @date_amount = DateAmount.new(params[:date_amount].to_unsafe_h)
     @date_amount.save
 
-    redirect_to instrument_amounts_path
+    redirect_to date_amounts_path
   end
 
   private
