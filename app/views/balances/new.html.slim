@@ -1,0 +1,8 @@
+.row.mb-2
+  .col
+    h1 New Balance for account "#{@account}"
+
+.row.mb-2
+  .col
+    = render 'form', account: @account, balance: @balance
+    = link_to 'Back', account_balances_path(@account)

@@ -1,0 +1,11 @@
+= simple_form_for([account, balance], wrapper: :horizontal_form,
+  wrapper_mappings: { date: :horizontal_multi_select }) do |f|
+  = f.error_notification
+  = f.error :base
+
+  = f.input :date
+  = f.input :amount
+
+  .form-actions.row
+    .col-sm.offset-sm-3
+      = f.button :submit, class: 'btn btn-primary'

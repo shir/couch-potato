@@ -1,0 +1,12 @@
+.row.mb-2
+  .col
+    h1 Editing balance for account "#{@balance.account}" on a date #{l @balance.date}
+
+.row.mb-2
+  .col
+    = render 'form', account: nil, balance: @balance
+
+.row.mb-2
+  .col
+    = link_to 'Back', account_balances_path(@balance.account)
+

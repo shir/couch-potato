@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Date:
+  = @balance.date
+p
+  strong Account:
+  = @balance.account
+p
+  strong Amount:
+  = @balance.amount
+
+=> link_to 'Edit', edit_balance_path(@balance)
+'|
+=< link_to 'Back', balances_path
