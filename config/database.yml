@@ -23,8 +23,8 @@ default: &default
 
 development:
   <<: *default
-  database: couch-potato_development
+  database: couch_potato_dev
 
 test:
   <<: *default
-  database: couch-potato_test
+  database: couch_potato_test

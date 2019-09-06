@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TotalAmountChart < BaseQuery
   DEFAULT_CURRENCY = 'RUB'
 
@@ -29,7 +31,6 @@ class TotalAmountChart < BaseQuery
         else
           Money.new(amount.price.cents * rate.rates[amount.currency], DEFAULT_CURRENCY)
         end
-      Rails.logger.debug "price: #{price.inspect}"
       sum + (price * amount.count)
     end.to_f
   end
