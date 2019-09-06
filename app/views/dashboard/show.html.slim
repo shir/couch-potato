@@ -4,7 +4,8 @@
 
 .row.mb-2
   .col
-    = line_chart @total_chart_data, min: nil, thousands: ' ', decimal: ',', suffix: ' ₽'
+    = line_chart @total_chart_data, min: nil, thousands: ' ',
+      decimal: ',', suffix: ' ₽', height: '500px'
 
 .row.mb-2
   .col
@@ -12,4 +13,4 @@
 
 .row.mb-2
   .col
-    = line_chart @prices_chart_data, min: nil, suffix: '%'
+    = line_chart @prices_chart_data, min: nil, suffix: '%', height: '500px'
