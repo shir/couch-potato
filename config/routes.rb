@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resources :instruments, only: %i[index new create edit update destroy] do
     resources :instrument_amounts, except: %i[index show], path: :amounts, shallow: true
   end
-  resources :date_amounts, except: %i[destroy], param: :date
+  resources :date_records, except: %i[show], param: :date
 
   root 'dashboard#show'
 end

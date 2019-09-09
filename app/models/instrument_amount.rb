@@ -8,17 +8,17 @@ class InstrumentAmount < ApplicationRecord
     },
   }.freeze
 
+  belongs_to :date_record, inverse_of: :instrument_amounts
   belongs_to :instrument, inverse_of: :amounts
 
-  validates :date, presence: true
+  validates :date_record, presence: true
   validates :instrument, presence: true
   validates :count, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates :date_record_id, uniqueness: { scope: :instrument_id }
 
   monetize :price_cents, with_model_currency: :currency
 
   delegate :currency, to: :instrument, allow_nil: true
-
-  scope :prev, ->(date){ where('"instrument_amounts"."date" < ?', date).order }
 
   class << self
     def prev_date(date)
@@ -37,7 +37,7 @@ class InstrumentAmount < ApplicationRecord
     return price unless SPLITS.keys.include?(instrument&.ticker)
 
     split = SPLITS[instrument.ticker]
-    return price if date >= split[:date]
+    return price if date_record.date >= split[:date]
 
     return price / split[:divide]
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_06_182344) do
+ActiveRecord::Schema.define(version: 2019_09_09_115130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,31 +23,40 @@ ActiveRecord::Schema.define(version: 2019_09_06_182344) do
   end
 
   create_table "balances", force: :cascade do |t|
-    t.date "date", null: false
     t.bigint "account_id", null: false
     t.integer "amount_cents", default: 0, null: false
     t.string "amount_currency", default: "USD", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "date_record_id", null: false
     t.index ["account_id"], name: "index_balances_on_account_id"
+    t.index ["date_record_id"], name: "index_balances_on_date_record_id"
+  end
+
+  create_table "date_records", force: :cascade do |t|
+    t.date "date", null: false
+    t.boolean "rebalance", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date"], name: "index_date_records_on_date", unique: true
   end
 
   create_table "exchange_rates", force: :cascade do |t|
-    t.date "date", null: false
     t.jsonb "rates", default: {}, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["date"], name: "index_exchange_rates_on_date", unique: true
+    t.bigint "date_record_id", null: false
+    t.index ["date_record_id"], name: "index_exchange_rates_on_date_record_id"
   end
 
   create_table "instrument_amounts", force: :cascade do |t|
     t.bigint "instrument_id", null: false
-    t.date "date", null: false
     t.integer "count", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "price_cents", default: 0, null: false
-    t.index ["instrument_id", "date"], name: "index_instrument_amounts_on_instrument_id_and_date", unique: true
+    t.bigint "date_record_id", null: false
+    t.index ["date_record_id"], name: "index_instrument_amounts_on_date_record_id"
   end
 
   create_table "instruments", force: :cascade do |t|
@@ -59,5 +68,8 @@ ActiveRecord::Schema.define(version: 2019_09_06_182344) do
   end
 
   add_foreign_key "balances", "accounts"
+  add_foreign_key "balances", "date_records"
+  add_foreign_key "exchange_rates", "date_records"
+  add_foreign_key "instrument_amounts", "date_records"
   add_foreign_key "instrument_amounts", "instruments"
 end

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class InstrumentPricesChart < BaseQuery
-  BASE = 100.freeze
+  BASE = 100
 
   attr_reader :start_date
 
@@ -19,12 +21,12 @@ class InstrumentPricesChart < BaseQuery
   private
 
   def data(instrument)
-    amounts = instrument.amounts.order(date: :asc)
-    amounts = amounts.where('"instrument_amounts"."date" >= ?', start_date) if start_date.present?
+    amounts = instrument.amounts.joins(:date_record).order('"date_records"."date" ASC')
+    amounts = amounts.where('"date_records"."date" >= ?', start_date) if start_date.present?
     first_amount = amounts.to_a.first
     base = Money.from_amount(BASE, instrument.currency).to_f
     amounts.to_a.each_with_object({}) do |amount, d|
-      d[amount.date] = (amount.absolute_price.to_f * base / first_amount.absolute_price.to_f).round(2)
+      d[amount.date_record.date] = (amount.absolute_price.to_f * base / first_amount.absolute_price.to_f).round(2)
     end
   end
 end

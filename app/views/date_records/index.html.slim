@@ -1,8 +1,8 @@
 .row.mb-2
   .col
-    h1 Amounts
+    h1 Recoreds
   .col-auto.align-self-center
-    = link_to 'Add Amount', [:new, :date_amount], class: 'btn btn-secondary'
+    = link_to 'Add Records', new_date_record_path, class: 'btn btn-secondary'
 
 table.table.table-striped.table-sm
   thead
@@ -15,7 +15,5 @@ table.table.table-striped.table-sm
       - @instruments.each do |i|
         th.text-center= i
   tbody
-    - @dates.each do |date|
-      = render 'date_amount_row',
-        date_amount: @date_amounts[date],
-        instruments: @instruments
+    - @date_records.each do |date_record|
+      = render 'date_record_row', date_record: date_record

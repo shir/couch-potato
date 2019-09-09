@@ -1,0 +1,46 @@
+= simple_form_for(date_record, wrapper: :horizontal_form,
+  wrapper_mappings: { date: :horizontal_multi_select, boolean: :horizontal_boolean }) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    .card.mb-3
+      .card-body
+        = f.input :date, as: :date
+        = f.input :rebalance, hint: 'check if you rebalanced on this date'
+    .card.mb-3
+      .card-header Currencies
+      .card-body
+        = f.simple_fields_for :exchange_rate do |erf|
+          = erf.simple_fields_for HashFieldsDecorator.new(:rates, erf.object.rates) do |rf|
+            - ExchangeRate::CURRENCIES.each do |currency|
+              = rf.input currency, label: currency, input_html: { class: 'text-right' }
+    .card.mb-3
+      .card-header Cash
+      .card-body
+        = f.simple_fields_for :balances do |bf|
+          = bf.hidden_field :account_id
+          = bf.input :amount, label: bf.object.account,
+            input_html: { value: bf.object.amount > 0 ? bf.object.amount : nil, class: 'text-right' }
+    .card.mb-3
+      .card-header Prices
+      .card-body
+        = f.simple_fields_for :instrument_amounts do |af|
+          .row
+            = af.hidden_field :instrument_id
+            .col-sm-3
+              legend.col-form-label= af.object.instrument
+            .col-sm-4
+              = af.input :count, label: 'Count',
+                input_html: { class: 'text-right' }
+            .col-sm-5
+              = af.input :price, label: 'Price',
+                input_html: { value: af.object.price > 0 ? af.object.price : nil, class: 'text-right' }
+
+  .form-actions.row
+    .col
+      - if f.object.persisted?
+        = link_to 'Remove', date_record_path, class: 'btn btn-outline-danger',
+          data: { method: :delete, confirm: 'Are you sure?' }
+    .col-auto
+      = f.button :submit, class: 'btn btn-primary'

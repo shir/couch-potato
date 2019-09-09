@@ -1,18 +1,18 @@
-tr id=dom_id(date_amount)
-  th.text-nowrap= link_to l(date_amount.date), edit_date_amount_path(date_amount)
+tr id=dom_id(date_record) class=(date_record.rebalance? ? 'font-weight-bold' : '')
+  th.text-nowrap= link_to date_record, edit_date_record_path(date_record)
   - ExchangeRate::CURRENCIES.each do |c|
     td.text-nowrap.text-right
-      - if (rate = date_amount.rates[c])
+      - if (rate = date_record.exchange_rate.rates[c])
         = number_with_precision(rate, precision: 2)
   - @accounts.each do |account|
-    - if (balance = date_amount.balances[account.id])
+    - if (balance = date_record.balances.find_by(account_id: account.id))
       td.text-nowrap.text-right
         = link_to humanized_money_with_symbol(balance.amount), edit_balance_path(balance)
     - else
       td.text-center
         = link_to '+', new_account_balance_path(account)
   - @instruments.each do |i|
-    - if (amount = date_amount.amounts[i.ticker])
+    - if (amount = date_record.instrument_amounts.find_by(instrument_id: i.id))
       td.text-nowrap.text-right[
         data-toggle='tooltip'
         data-html='true'

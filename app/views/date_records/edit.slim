@@ -1,0 +1,11 @@
+.row.mb-2
+  .col
+    h1 Edit data for #{@date_record}
+
+.row.mb-2
+  .col
+    = render 'form', date_record: @date_record
+
+.row.mb-2
+  .col
+    = link_to 'Back', date_records_path

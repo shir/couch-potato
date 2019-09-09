@@ -10,32 +10,28 @@ class TotalAmountChart < BaseQuery
   end
 
   def result
-    dates.each_with_object({}) do |date, data|
-      data[date] = date_data(date)
+    date_records.each_with_object({}) do |date_record, data|
+      data[date_record.date] = date_data(date_record)
     end
   end
 
   private
 
-  def dates
-    @dates ||= InstrumentAmount.order(date: :asc).distinct.pluck(:date)
+  def date_records
+    @date_records ||= DateRecord.order(date: :asc)
   end
 
-  def date_data(date)
-    rate = rates[date]
-    InstrumentAmount.includes(:instrument).where(date: date)
+  def date_data(date_record)
+    rate = date_record.exchange_rate
+    date_record.instrument_amounts
       .inject(Money.from_amount(0, DEFAULT_CURRENCY)) do |sum, amount|
       price =
         if amount.currency == DEFAULT_CURRENCY
           amount.price
         else
-          Money.new(amount.price.cents * rate.rates[amount.currency], DEFAULT_CURRENCY)
+          Money.new(amount.price.cents * rate.rates[amount.currency].to_f, DEFAULT_CURRENCY)
         end
       sum + (price * amount.count)
     end.to_f
-  end
-
-  def rates
-    @rates ||= ExchangeRate.where(date: dates).index_by(&:date)
   end
 end
