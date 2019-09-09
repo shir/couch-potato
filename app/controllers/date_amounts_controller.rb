@@ -23,6 +23,10 @@ class DateAmountsController < ApplicationController
     redirect_to date_amounts_path
   end
 
+  def edit
+    @date_amount = DateAmount.new(date: Date.parse(params[:date]))
+  end
+
   private
 
   def date_amount_params

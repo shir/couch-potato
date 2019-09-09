@@ -13,6 +13,10 @@ class DateAmount < ApplicationFormObject
     super convert_date_params(params, :date)
   end
 
+  def to_param
+    date.to_s
+  end
+
   def fill_from(date_amount)
     return unless date
 

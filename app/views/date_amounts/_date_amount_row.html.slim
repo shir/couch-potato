@@ -1,5 +1,5 @@
 tr id=dom_id(date_amount)
-  th.text-nowrap=l date_amount.date
+  th.text-nowrap= link_to l(date_amount.date), edit_date_amount_path(date_amount)
   - ExchangeRate::CURRENCIES.each do |c|
     td.text-nowrap.text-right
       - if (rate = date_amount.rates[c])
