@@ -14,6 +14,8 @@ html
     = render 'shared/layout/header'
     .container-fluid
       #flash_messages
-        = alert
-        = notice
+        - if alert
+          .alert.alert-danger= alert
+        - if notice
+          .alert.alert-success= notice
       = yield

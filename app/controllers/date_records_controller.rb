@@ -4,7 +4,7 @@ class DateRecordsController < ApplicationController
   before_action :set_date_record, only: %i[edit update destroy]
 
   def index
-    @date_records = DateRecord.order(date: :desc)
+    @date_records = DateRecord.preload(:exchange_rate).order(date: :desc)
     @instruments = Instrument.visible
     @accounts = Account.all
   end
@@ -12,7 +12,7 @@ class DateRecordsController < ApplicationController
   def new
     @date_record = DateRecord.new(date: Time.zone.today)
 
-    if (prev_record = DateRecord.previous(@date_record.date))
+    if (prev_record = DateRecord.previous(@date_record.date)) # rubocop:disable Style/GuardClause
       FillDateRecord.perform(@date_record, prev_record)
     end
   end
@@ -22,7 +22,7 @@ class DateRecordsController < ApplicationController
     if @date_record.save
       redirect_to date_records_path, notice: 'Date record has been created.'
     else
-      @date_record.build_exchange_rate unless @date_record.exchange_rate
+      FillDateRecord.perform(@date_record)
       render :new
     end
   end
