@@ -4,6 +4,13 @@ tr id=dom_id(date_amount)
     td.text-nowrap.text-right
       - if (rate = date_amount.rates[c])
         = number_with_precision(rate, precision: 2)
+  - @accounts.each do |account|
+    - if (balance = date_amount.balances[account.id])
+      td.text-nowrap.text-right
+        = link_to humanized_money_with_symbol(balance.amount), edit_balance_path(balance)
+    - else
+      td.text-center
+        = link_to '+', new_account_balance_path(account)
   - @instruments.each do |i|
     - if (amount = date_amount.amounts[i.ticker])
       td.text-nowrap.text-right[

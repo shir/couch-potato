@@ -10,6 +10,8 @@ table.table.table-striped.table-sm
       th Date
       - ExchangeRate::CURRENCIES.each do |c|
         th.text-center= c
+      - @accounts.each do |a|
+        th.text-center= a
       - @instruments.each do |i|
         th.text-center= i
   tbody

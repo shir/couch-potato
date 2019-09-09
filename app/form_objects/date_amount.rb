@@ -7,6 +7,7 @@ class DateAmount < ApplicationFormObject
 
   def initialize(params = {})
     define_rate_methods
+    define_balance_methods
     define_amount_methods
 
     super convert_date_params(params, :date)
@@ -16,11 +17,20 @@ class DateAmount < ApplicationFormObject
     return unless date
 
     fill_rates_from(date_amount)
+    fill_balances_from(date_amount)
     fill_amounts_from(date_amount)
+  end
+
+  def accounts
+    @accounts ||= Account.all
   end
 
   def instruments
     @instruments ||= Instrument.visible
+  end
+
+  def balances
+    @balances ||= Balance.where(date: date).index_by(&:account_id)
   end
 
   def amounts
@@ -32,6 +42,10 @@ class DateAmount < ApplicationFormObject
 
   def rates
     @rates ||= ExchangeRate.find_by(date: date)&.rates || {}
+  end
+
+  def balance_name(account)
+    "account_#{account.id}_balance"
   end
 
   def rate_name(currency)
@@ -47,10 +61,29 @@ class DateAmount < ApplicationFormObject
   end
 
   def save
+    save_rates
+    save_balances
+    save_amounts
+  end
+
+  private
+
+  def save_rates
     er = ExchangeRate.find_or_initialize_by(date: date)
     er.rates = rates
     er.save
+  end
 
+  def save_balances
+    balances.each do |_account_id, balance|
+      balance.date = date
+      next if balance.save
+
+      Rails.logger.error "Error on save balance #{balance.inspect}: #{balance.errors.full_messages.inspect}"
+    end
+  end
+
+  def save_amounts
     amounts.each do |_ticker, amount|
       amount.date = date
       next if amount.save
@@ -58,8 +91,6 @@ class DateAmount < ApplicationFormObject
       Rails.logger.error "Error on save amount #{amount.inspect}: #{amount.errors.full_messages.inspect}"
     end
   end
-
-  private
 
   def define_rate_methods
     ExchangeRate::CURRENCIES.each do |currency|
@@ -74,6 +105,13 @@ class DateAmount < ApplicationFormObject
     end
   end
 
+  def define_balance_methods
+    accounts.each do |account|
+      self.class.define_method(balance_name(account), balance_getter(account))
+      self.class.define_method("#{balance_name(account)}=", balance_setter(account))
+    end
+  end
+
   def define_amount_methods # rubocop:disable Metrics/AbcSize
     instruments.each do |instrument|
       self.class.define_method(count_name(instrument.ticker), count_getter(instrument))
@@ -81,6 +119,17 @@ class DateAmount < ApplicationFormObject
       self.class.define_method(price_name(instrument.ticker), price_getter(instrument))
       self.class.define_method("#{price_name(instrument.ticker)}=", price_setter(instrument))
     end
+  end
+
+  def balance_getter(account)
+    proc{ balances[account.id]&.amount }
+  end
+
+  def balance_setter(account)
+    proc{ |amount|
+      balance = balances[account.id] ||= account.balances.build
+      balance.amount = amount
+    }
   end
 
   def count_getter(instrument)
@@ -110,6 +159,16 @@ class DateAmount < ApplicationFormObject
       next if rates[currency]
 
       rates[currency] = date_amount.rates[currency]
+    end
+  end
+
+  def fill_balances_from(date_amount)
+    accounts.each do |account|
+      next unless (da = date_amount.balances[account.id])
+
+      balances[account.id] ||= account.balances.build(
+        amount: da.amount,
+      )
     end
   end
 

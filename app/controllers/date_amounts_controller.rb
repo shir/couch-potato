@@ -5,6 +5,7 @@ class DateAmountsController < ApplicationController
     @dates = InstrumentAmount.distinct.order(date: :desc).pluck(:date)
     @date_amounts = @dates.each_with_object({}){ |date, da| da[date] = DateAmount.new(date: date) }
     @instruments = Instrument.visible
+    @accounts = Account.all
   end
 
   def new

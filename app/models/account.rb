@@ -9,6 +9,6 @@ class Account < ApplicationRecord
   validates :currency, presence: true, inclusion: { in: CURRENCIES }
 
   def to_s
-    name
+    "#{name} (#{currency})"
   end
 end
