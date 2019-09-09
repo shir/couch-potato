@@ -1,18 +1,18 @@
 tr id=dom_id(date_record) class=(date_record.rebalance? ? 'font-weight-bold' : '')
   th.text-nowrap= link_to date_record, edit_date_record_path(date_record)
-  - ExchangeRate::CURRENCIES.each do |c|
+  - page.currencies.each do |c|
     td.text-nowrap.text-right
-      - if (rate = date_record.exchange_rate.rates[c])
+      - if (rate = page.exchange_rate(date_record, c))
         = number_with_precision(rate, precision: 2)
-  - @accounts.each do |account|
-    - if (balance = date_record.balances.find_by(account_id: account.id))
+  - page.accounts.each do |account|
+    - if (balance = page.balance(date_record, account))
       td.text-nowrap.text-right
         = link_to humanized_money_with_symbol(balance.amount), edit_balance_path(balance)
     - else
       td.text-center
         = link_to '+', new_account_balance_path(account)
-  - @instruments.each do |i|
-    - if (amount = date_record.instrument_amounts.find_by(instrument_id: i.id))
+  - page.instruments.each do |instrument|
+    - if (amount = page.amount(date_record, instrument))
       td.text-nowrap.text-right[
         data-toggle='tooltip'
         data-html='true'
@@ -22,4 +22,4 @@ tr id=dom_id(date_record) class=(date_record.rebalance? ? 'font-weight-bold' : '
         = link_to humanized_money_with_symbol(amount.total), edit_instrument_amount_path(amount)
     - else
       td.text-center
-        = link_to '+', [:new, i, :instrument_amount]
+        = link_to '+', [:new, instrument, :instrument_amount]

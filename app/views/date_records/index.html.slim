@@ -8,12 +8,12 @@ table.table.table-striped.table-sm
   thead
     tr
       th Date
-      - ExchangeRate::CURRENCIES.each do |c|
+      - @page.currencies.each do |c|
         th.text-center= c
-      - @accounts.each do |a|
+      - @page.accounts.each do |a|
         th.text-center= a
-      - @instruments.each do |i|
+      - @page.instruments.each do |i|
         th.text-center= i
   tbody
-    - @date_records.each do |date_record|
-      = render 'date_record_row', date_record: date_record
+    - @page.date_records.each do |date_record|
+      = render 'date_record_row', page: @page, date_record: date_record

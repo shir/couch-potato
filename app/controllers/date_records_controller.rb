@@ -4,9 +4,7 @@ class DateRecordsController < ApplicationController
   before_action :set_date_record, only: %i[edit update destroy]
 
   def index
-    @date_records = DateRecord.preload(:exchange_rate).order(date: :desc)
-    @instruments = Instrument.visible
-    @accounts = Account.all
+    @page = DateRecordsPage.new
   end
 
   def new
