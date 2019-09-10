@@ -13,7 +13,7 @@ class InstrumentPricesChart < BaseQuery
     Instrument.visible.map do |instrument|
       {
         name: instrument.ticker,
-        data: data(instrument)
+        data: data(instrument),
       }
     end
   end
@@ -21,12 +21,20 @@ class InstrumentPricesChart < BaseQuery
   private
 
   def data(instrument)
-    amounts = instrument.amounts.joins(:date_record).order('"date_records"."date" ASC')
-    amounts = amounts.where('"date_records"."date" >= ?', start_date) if start_date.present?
+    amounts = amounts(instrument)
     first_amount = amounts.to_a.first
     base = Money.from_amount(BASE, instrument.currency).to_f
     amounts.to_a.each_with_object({}) do |amount, d|
       d[amount.date_record.date] = (amount.absolute_price.to_f * base / first_amount.absolute_price.to_f).round(2)
     end
+  end
+
+  def amounts(instrument)
+    amounts = instrument.amounts
+      .joins(:date_record)
+      .preload(:date_record)
+      .order(Arel.sql('"date_records"."date" ASC'))
+    amounts = amounts.where('"date_records"."date" >= ?', start_date) if start_date.present?
+    amounts
   end
 end

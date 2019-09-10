@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DashboardController < ApplicationController
   PRICE_CHART_START_DATE = Date.parse('2018-12-14').freeze
 
