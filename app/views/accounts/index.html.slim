@@ -10,8 +10,8 @@ table.table.table-striped.table-sm
       th colspan=2
   tbody
     - @accounts.each do |account|
-      tr
-        td= link_to account.name, account_balances_path(account)
+      tr class=(account.hidden? ? 'text-muted' : nil)
+        td= account.name
         td= account.currency
         td= link_to edit_icon, edit_account_path(account)
         td= link_to remove_icon, account, method: :delete, data: { confirm: 'Are you sure?' }

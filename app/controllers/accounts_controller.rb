@@ -4,7 +4,7 @@ class AccountsController < ApplicationController
   before_action :set_account, only: %i[edit update destroy]
 
   def index
-    @accounts = Account.all
+    @accounts = Account.all.order(name: :asc)
   end
 
   def new
@@ -45,6 +45,6 @@ class AccountsController < ApplicationController
   end
 
   def account_params
-    params.require(:account).permit(:name, :currency)
+    params.require(:account).permit(:name, :currency, :hidden)
   end
 end

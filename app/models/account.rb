@@ -8,6 +8,8 @@ class Account < ApplicationRecord
   validates :name, presence: true
   validates :currency, presence: true, inclusion: { in: CURRENCIES }
 
+  scope :visible, ->{ where(hidden: false) }
+
   def to_s
     "#{name} (#{currency})"
   end

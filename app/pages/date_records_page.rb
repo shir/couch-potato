@@ -14,7 +14,7 @@ class DateRecordsPage
   end
 
   def accounts
-    @accounts ||= Account.all
+    @accounts ||= Account.visible
   end
 
   def exchange_rate(date_record, currency)

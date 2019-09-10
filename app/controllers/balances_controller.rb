@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 class BalancesController < ApplicationController
-  before_action :set_account, only: %i[index new create]
+  before_action :set_account, only: %i[new create]
   before_action :set_balance, only: %i[edit update destroy]
-
-  def index
-    @balances = @account.balances.order(date: :desc)
-  end
 
   def new
     @balance = @account.balances.build

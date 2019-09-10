@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_115130) do
+ActiveRecord::Schema.define(version: 2019_09_10_084517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2019_09_09_115130) do
     t.string "currency", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "hidden", default: false, null: false
+    t.index ["hidden"], name: "index_accounts_on_hidden"
   end
 
   create_table "balances", force: :cascade do |t|

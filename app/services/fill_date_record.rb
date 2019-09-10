@@ -25,7 +25,7 @@ class FillDateRecord < BaseService
   end
 
   def fill_balances
-    Account.all.each do |account|
+    Account.visible.each do |account|
       date_record.balances.find_or_initialize_by(account_id: account.id) do |b|
         b.amount = from_record&.balances&.find_by(account_id: account.id)&.amount
       end

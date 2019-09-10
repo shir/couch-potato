@@ -1,10 +1,11 @@
 = simple_form_for(account, wrapper: :horizontal_form,
-  wrapper_mappings: { radio_buttons: :horizontal_collection }) do |f|
+  wrapper_mappings: { radio_buttons: :horizontal_collection, boolean: :horizontal_boolean }) do |f|
   = f.error_notification
   = f.error :base
 
   = f.input :name
   = f.input :currency, as: :radio_buttons, collection: Account::CURRENCIES
+  = f.input :hidden
 
   .form-actions.row
     .col-sm.offset-sm-3
