@@ -67,7 +67,7 @@ class TotalAmountChart < BaseQuery
       amount.price
     else
       rate = amount.date_record.exchange_rate
-      Money.new(amount.price.cents * rate.rates[amount.currency].to_f, DEFAULT_CURRENCY)
+      Money.new(amount.price.cents * rate.rate(amount.currency).to_f, DEFAULT_CURRENCY)
     end
   end
 
@@ -76,7 +76,7 @@ class TotalAmountChart < BaseQuery
       balance.amount
     else
       rate = balance.date_record.exchange_rate
-      Money.new(balance.amount.cents * rate.rates[balance.currency].to_f, DEFAULT_CURRENCY)
+      Money.new(balance.amount.cents * rate.rate(balance.currency).to_f, DEFAULT_CURRENCY)
     end
   end
 end

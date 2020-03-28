@@ -3,6 +3,8 @@
 class DateRecordsPage
   include Pagy::Backend
 
+  DEFAULT_CURRENCY = 'RUB'
+
   attr_reader :params, :pagy_i
 
   def initialize(params)
@@ -29,12 +31,13 @@ class DateRecordsPage
     @accounts ||= Account.visible
   end
 
-  # def total(date_record)
-  # end
+  def total(date_record)
+    balances_total(date_record) + instrument_amounts_total(date_record)
+  end
 
   def exchange_rate(date_record, currency)
     er = exchange_rates[date_record.id]
-    er ? er.rates[currency] : nil
+    er ? er.rate(currency) : nil
   end
 
   def balance(date_record, account)
@@ -46,6 +49,30 @@ class DateRecordsPage
   end
 
   private
+
+  def balances_total(date_record)
+    balances[date_record.id].values.map do |balance|
+      if balance.currency == DEFAULT_CURRENCY
+        balance.amount
+      else
+        rate = exchange_rate(date_record, balance.currency)
+        Money.new(balance.amount.cents * rate.to_f, DEFAULT_CURRENCY)
+      end
+    end.sum
+  end
+
+  def instrument_amounts_total(date_record)
+    amounts[date_record.id].values.map do |amount|
+      price =
+        if amount.currency == DEFAULT_CURRENCY
+          amount.price
+        else
+          rate = exchange_rate(date_record, amount.currency)
+          Money.new(amount.price.cents * rate.to_f, DEFAULT_CURRENCY)
+        end
+      price * amount.count
+    end.sum
+  end
 
   def exchange_rates
     @exchange_rates ||= ExchangeRate.where(date_record_id: @date_records.ids).index_by(&:date_record_id)

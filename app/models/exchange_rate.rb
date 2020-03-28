@@ -8,6 +8,10 @@ class ExchangeRate < ApplicationRecord
   validates :date_record, presence: true, uniqueness: true
 
   def usd
-    rates['USD']
+    rate('USD')
+  end
+
+  def rate(currency)
+    rates[currency].sub(',', '.')
   end
 end

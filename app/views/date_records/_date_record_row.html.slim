@@ -1,5 +1,7 @@
 tr id=dom_id(date_record) class=(date_record.rebalance? ? 'font-weight-bold' : '')
   th.text-nowrap= link_to date_record, edit_date_record_path(date_record)
+  td.text-nowrap.text-right
+    = humanized_money_with_symbol(page.total(date_record))
   - page.currencies.each do |c|
     td.text-nowrap.text-right
       - if (rate = page.exchange_rate(date_record, c))
