@@ -5,6 +5,8 @@ class DateRecordsController < ApplicationController
 
   def index
     @page = DateRecordsPage.new
+
+    @pagy, @date_records = pagy(@page.date_records)
   end
 
   def new

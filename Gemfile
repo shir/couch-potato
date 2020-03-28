@@ -16,6 +16,7 @@ gem 'simple_form'
 gem 'money-rails'
 gem 'monetize'
 gem 'chartkick'
+gem 'pagy'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

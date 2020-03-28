@@ -15,5 +15,7 @@ table.table.table-striped.table-sm
       - @page.instruments.each do |i|
         th.text-center= i
   tbody
-    - @page.date_records.each do |date_record|
+    - @date_records.each do |date_record|
       = render 'date_record_row', page: @page, date_record: date_record
+
+== pagy_bootstrap_nav(@pagy)
