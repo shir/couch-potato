@@ -4,9 +4,7 @@ class DateRecordsController < ApplicationController
   before_action :set_date_record, only: %i[edit update destroy]
 
   def index
-    @page = DateRecordsPage.new
-
-    @pagy, @date_records = pagy(@page.date_records)
+    @page = DateRecordsPage.new(params)
   end
 
   def new

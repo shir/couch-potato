@@ -1,8 +1,20 @@
 # frozen_string_literal: true
 
 class DateRecordsPage
+  include Pagy::Backend
+
+  attr_reader :params, :pagy_i
+
+  def initialize(params)
+    @params = params
+  end
+
   def date_records
-    @date_records ||= DateRecord.order(date: :desc)
+    return @date_records if @date_records
+
+    @pagy_i, @date_records = pagy(DateRecord.order(date: :desc))
+
+    return @date_records
   end
 
   def currencies
@@ -16,6 +28,9 @@ class DateRecordsPage
   def accounts
     @accounts ||= Account.visible
   end
+
+  # def total(date_record)
+  # end
 
   def exchange_rate(date_record, currency)
     er = exchange_rates[date_record.id]
