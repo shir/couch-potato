@@ -4,8 +4,9 @@
 
 .row.mb-2
   .col
-    = line_chart @total_chart_data, min: nil, thousands: ' ',
-      decimal: ',', suffix: ' ₽', height: '500px'
+    = line_chart @total_chart.result, min: nil, thousands: ' ',
+      decimal: ',', suffix: ' ₽', height: '500px',
+        library: total_chart_annotation_options(@total_chart)
 
 .row.mb-2
   .col

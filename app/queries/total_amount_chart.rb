@@ -10,10 +10,17 @@ class TotalAmountChart < BaseQuery
   end
 
   def result
-    {}.tap do |data|
+    @result ||= {}.tap do |data|
       collect_amounts_data(data)
       collect_balances_data(data)
     end
+  end
+
+  def rebalances
+    # if `@rebalances` are blank run `result` to build rebalances
+    result unless @rebalances
+
+    @rebalances
   end
 
   private
@@ -22,6 +29,8 @@ class TotalAmountChart < BaseQuery
     amounts.each do |amount|
       data[amount.date_record.date] ||= 0.0
       data[amount.date_record.date] += (price(amount) * amount.count).to_f
+
+      add_rebalance(amount.date_record) if amount.date_record.rebalance?
     end
   end
 
@@ -29,18 +38,25 @@ class TotalAmountChart < BaseQuery
     balances.each do |balance|
       data[balance.date_record.date] ||= 0.0
       data[balance.date_record.date] += balance_amount(balance).to_f
+
+      add_rebalance(balance.date_record) if balance.date_record.rebalance?
     end
   end
 
+  def add_rebalance(date_record)
+    @rebalances ||= []
+    @rebalances << date_record.date unless @rebalances.include?(date_record.date)
+  end
+
   def amounts
-    InstrumentAmount
+    @amounts ||= InstrumentAmount
       .joins(:date_record)
       .preload(:instrument, date_record: :exchange_rate)
       .order(Arel.sql('"date_records"."date" ASC'))
   end
 
   def balances
-    Balance
+    @balances ||= Balance
       .joins(:date_record)
       .preload(:account, date_record: :exchange_rate)
       .order(Arel.sql('"date_records"."date" ASC'))
