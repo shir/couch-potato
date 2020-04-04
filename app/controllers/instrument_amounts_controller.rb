@@ -21,6 +21,7 @@ class InstrumentAmountsController < ApplicationController
     @amount = @instrument.amounts.build(amount_params)
 
     if @amount.save
+      @amount.date_record.recalculate_total_amounts
       redirect_to date_amounts_path, notice: 'Instrument amount was successfully created.'
     else
       render :new
@@ -29,6 +30,7 @@ class InstrumentAmountsController < ApplicationController
 
   def update
     if @amount.update(amount_params)
+      @amount.date_record.recalculate_total_amounts
       redirect_to date_amounts_path, notice: 'Instrument amount was successfully updated.'
     else
       render :edit
@@ -37,6 +39,7 @@ class InstrumentAmountsController < ApplicationController
 
   def destroy
     @amount.destroy
+    @amount.date_record.recalculate_total_amounts
     redirect_to date_amounts_path, notice: 'Instrument amount was successfully destroyed.'
   end
 

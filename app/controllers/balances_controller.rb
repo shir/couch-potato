@@ -15,6 +15,7 @@ class BalancesController < ApplicationController
     @balance = @account.balances.build(balance_params)
 
     if @balance.save
+      @balance.date_record.recalculate_total_amounts
       redirect_to account_balances_path(@account), notice: 'Balance was successfully created.'
     else
       render :new
@@ -23,6 +24,7 @@ class BalancesController < ApplicationController
 
   def update
     if @balance.update(balance_params)
+      @balance.date_record.recalculate_total_amounts
       redirect_to account_balances_path(@balance.account), notice: 'Balance was successfully updated.'
     else
       render :edit
@@ -32,6 +34,7 @@ class BalancesController < ApplicationController
   # DELETE /balances/1
   def destroy
     @balance.destroy
+    @balance.date_record.recalculate_total_amounts
     redirect_to account_balances_path(@balance.account), notice: 'Balance was successfully destroyed.'
   end
 

@@ -4,11 +4,12 @@
 #
 # Table name: date_records
 #
-#  id         :bigint           not null, primary key
-#  date       :date             not null
-#  rebalance  :boolean          default(FALSE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id            :bigint           not null, primary key
+#  date          :date             not null
+#  rebalance     :boolean          default(FALSE), not null
+#  total_amounts :jsonb            not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #
@@ -42,5 +43,14 @@ class DateRecord < ApplicationRecord
 
   def fill_from(date_record)
     build_exchange_rate(rates: date_record.exchange_rate.rates) if date_record.exchange_rate
+  end
+
+  def total_amount(currency)
+    Money.from_amount(total_amounts[currency] || 0, currency)
+  end
+
+  def recalculate_total_amounts
+    total_amounts['RUB'] = CalculateDateRecordTotal.perform(self, 'RUB').to_f.round(2)
+    save
   end
 end
