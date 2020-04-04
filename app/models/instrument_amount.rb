@@ -36,10 +36,13 @@ class InstrumentAmount < ApplicationRecord
 
   delegate :currency, to: :instrument, allow_nil: true
 
-  class << self
-    def prev_date(date)
-      where('"instrument_amounts"."date" < ?', date).order(date: :desc).first&.date
-    end
+  def prev
+    self.class
+      .joins(:date_record)
+      .where(instrument_id: instrument_id)
+      .where('"date_records"."date" < ?', date_record.date)
+      .order(date: :desc)
+      .first
   end
 
   def total

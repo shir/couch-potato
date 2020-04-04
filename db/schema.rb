@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_04_093557) do
+ActiveRecord::Schema.define(version: 2020_04_04_140803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,9 +70,21 @@ ActiveRecord::Schema.define(version: 2020_04_04_093557) do
     t.boolean "hidden", default: false, null: false
   end
 
+  create_table "purchases", force: :cascade do |t|
+    t.bigint "date_record_id"
+    t.bigint "instrument_id"
+    t.integer "count", null: false
+    t.integer "price_cents", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["date_record_id", "instrument_id"], name: "index_purchases_on_date_record_id_and_instrument_id", unique: true
+  end
+
   add_foreign_key "balances", "accounts"
   add_foreign_key "balances", "date_records"
   add_foreign_key "exchange_rates", "date_records"
   add_foreign_key "instrument_amounts", "date_records"
   add_foreign_key "instrument_amounts", "instruments"
+  add_foreign_key "purchases", "date_records"
+  add_foreign_key "purchases", "instruments"
 end

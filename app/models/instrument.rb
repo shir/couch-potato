@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: instruments
@@ -12,7 +14,9 @@
 class Instrument < ApplicationRecord
   CURRENCIES = %w[USD RUB].freeze
 
-  has_many :amounts, class_name: 'InstrumentAmount', inverse_of: :instrument, dependent: :destroy
+  has_many :amounts, class_name: 'InstrumentAmount',
+    inverse_of: :instrument, dependent: :restrict_with_error
+  has_many :purchases, inverse_of: :instrument, dependent: :destroy
 
   validates :ticker, presence: true
   validates :currency, presence: true, inclusion: { in: CURRENCIES }

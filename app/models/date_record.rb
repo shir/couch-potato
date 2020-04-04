@@ -19,6 +19,7 @@ class DateRecord < ApplicationRecord
   has_one :exchange_rate, inverse_of: :date_record, dependent: :destroy
   has_many :instrument_amounts, inverse_of: :date_record, dependent: :destroy
   has_many :balances, inverse_of: :date_record, dependent: :destroy
+  has_many :purchases, inverse_of: :date_record, dependent: :destroy
 
   validates :date, presence: true, uniqueness: true
 
