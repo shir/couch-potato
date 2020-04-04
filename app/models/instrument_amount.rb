@@ -1,5 +1,21 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: instrument_amounts
+#
+#  id             :bigint           not null, primary key
+#  count          :integer          not null
+#  price_cents    :integer          default(0), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  date_record_id :bigint           not null
+#  instrument_id  :bigint           not null
+#
+# Indexes
+#
+#  index_instrument_amounts_on_date_record_id  (date_record_id)
+#
 class InstrumentAmount < ApplicationRecord
   SPLITS = {
     'FXRU' => {

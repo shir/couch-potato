@@ -1,5 +1,19 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: date_records
+#
+#  id         :bigint           not null, primary key
+#  date       :date             not null
+#  rebalance  :boolean          default(FALSE), not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+# Indexes
+#
+#  index_date_records_on_date  (date) UNIQUE
+#
 class DateRecord < ApplicationRecord
   has_one :exchange_rate, inverse_of: :date_record, dependent: :destroy
   has_many :instrument_amounts, inverse_of: :date_record, dependent: :destroy

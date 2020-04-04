@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: instruments
+#
+#  id         :bigint           not null, primary key
+#  ticker     :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  currency   :string           not null
+#  hidden     :boolean          default(FALSE), not null
+#
 class Instrument < ApplicationRecord
   CURRENCIES = %w[USD RUB].freeze
 
