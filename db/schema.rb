@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_04_140803) do
+ActiveRecord::Schema.define(version: 2020_04_04_145745) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(version: 2020_04_04_140803) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "total_amounts", default: {}, null: false
+    t.jsonb "profits", default: {}, null: false
     t.index ["date"], name: "index_date_records_on_date", unique: true
   end
 

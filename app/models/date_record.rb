@@ -6,6 +6,7 @@
 #
 #  id            :bigint           not null, primary key
 #  date          :date             not null
+#  profits       :jsonb            not null
 #  rebalance     :boolean          default(FALSE), not null
 #  total_amounts :jsonb            not null
 #  created_at    :datetime         not null
@@ -50,8 +51,17 @@ class DateRecord < ApplicationRecord
     Money.from_amount(total_amounts[currency] || 0, currency)
   end
 
+  def profit(currency)
+    Money.from_amount(profits[currency] || 0, currency)
+  end
+
   def recalculate_total_amounts
     total_amounts['RUB'] = CalculateDateRecordTotal.perform(self, 'RUB').to_f.round(2)
+    save
+  end
+
+  def recalculate_profits
+    profits['RUB'] = CalculateDateRecordProfit.perform(self, 'RUB').to_f.round(2)
     save
   end
 end

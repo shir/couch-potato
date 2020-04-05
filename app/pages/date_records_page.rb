@@ -35,6 +35,10 @@ class DateRecordsPage
     date_record.total_amount(DEFAULT_CURRENCY)
   end
 
+  def profit(date_record)
+    date_record.profit(DEFAULT_CURRENCY)
+  end
+
   def exchange_rate(date_record, currency)
     er = exchange_rates[date_record.id]
     er ? er.rate(currency) : nil

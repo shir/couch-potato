@@ -18,7 +18,7 @@ class DateRecordsController < ApplicationController
   def create
     @date_record = DateRecord.new(date_record_params)
     if @date_record.save
-      @date_record.recalculate_total_amounts
+      UpdateDateRecordCalculations.perform(@date_record)
       redirect_to date_records_path, notice: 'Date record has been created.'
     else
       FillDateRecord.perform(@date_record)
@@ -32,7 +32,7 @@ class DateRecordsController < ApplicationController
 
   def update
     if @date_record.update(date_record_params)
-      @date_record.recalculate_total_amounts
+      UpdateDateRecordCalculations.perform(@date_record)
       redirect_to date_records_path, notice: 'Date record has been updated.'
     else
       Rails.logger.debug "errors: #{@date_record.errors.full_messages.inspect}"
