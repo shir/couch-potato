@@ -8,8 +8,6 @@ class UpdateDateRecordCalculations < BaseService
   end
 
   def perform
-    CollectPurchases.perform if date_record.rebalance?
-
     date_record.total_amounts['RUB'] =
       CalculateDateRecordTotal.perform(date_record, 'RUB').to_f.round(2)
     date_record.profits['RUB'] =

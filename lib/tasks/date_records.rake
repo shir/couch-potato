@@ -14,6 +14,8 @@ namespace :date_records do
 
   desc 'Recalculate all calculated values for all date records'
   task update_calculations: :environment do
+    CollectPurchases.perform
+
     DateRecord.find_each do |date_record|
       UpdateDateRecordCalculations.perform(date_record)
     end
