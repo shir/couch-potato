@@ -5,6 +5,7 @@ class DashboardController < ApplicationController
 
   def show
     @total_chart = TotalAmountChart.new
+    @profit_chart = ProfitChart.new
     @prices_chart_data = InstrumentPricesChart.result
   end
 end

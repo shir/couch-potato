@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module DashboardHelper
-  def total_chart_annotation_options(total_chart)
-    annotations = total_chart.rebalances.map do |date|
+  def chart_rebalances_options(chart)
+    annotations = chart.rebalances.map do |date|
       {
         type:        'line',
         mode:        'vertical',
