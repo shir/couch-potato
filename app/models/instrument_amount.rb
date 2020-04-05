@@ -60,4 +60,16 @@ class InstrumentAmount < ApplicationRecord
 
     return price / split[:divide]
   end
+
+  # This method reduce count to same value because some instruments
+  # may be splitted
+  def absolute_count
+    return nil if count.blank?
+    return count unless SPLITS.keys.include?(instrument&.ticker)
+
+    split = SPLITS[instrument.ticker]
+    return count if date_record.date >= split[:date]
+
+    return count * split[:divide]
+  end
 end

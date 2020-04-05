@@ -16,6 +16,25 @@ class CalculateDateRecordProfit < BaseService
 
   private
 
+  def profit_for_instrument_amount(instrument_amount)
+    return make_money(0) if instrument_amount.count.zero?
+
+    count = instrument_amount.absolute_count
+    profit = instrument_amount_purchases(instrument_amount).map do |purchase|
+      next 0 if count <= 0
+
+      position_count = count >= purchase.count ? purchase.count : count
+      count -= position_count
+
+      ia_price = convert(instrument_amount.absolute_price, date_record)
+      purchase_price = convert(purchase.price, purchase.date_record)
+
+      (ia_price - purchase_price) * position_count
+    end.sum
+
+    make_money(profit)
+  end
+
   def instrument_amount_purchases(instrument_amount)
     instrument_amount
       .instrument
@@ -23,25 +42,6 @@ class CalculateDateRecordProfit < BaseService
       .joins(:date_record)
       .where(DateRecord.arel_table[:date].lt(date_record.date))
       .order(DateRecord.arel_table[:date].desc)
-  end
-
-  def profit_for_instrument_amount(instrument_amount)
-    return make_money(0) if instrument_amount.count.zero?
-
-    count = instrument_amount.count
-    profit = instrument_amount_purchases(instrument_amount).map do |purchase|
-      break if count <= 0
-
-      position_count = count >= purchase.count ? purchase.count : count
-      count -= position_count
-
-      ia_price = convert(instrument_amount.price, date_record)
-      purchase_price = convert(purchase.price, purchase.date_record)
-
-      (ia_price - purchase_price) * position_count
-    end.sum
-
-    make_money(profit)
   end
 
   def profit_for_purchase(instrument_amount, purchase)

@@ -2,7 +2,7 @@
 
 class CollectPurchases < BaseService
   def perform
-    DateRecord.where(rebalance: true).find_each do |dr|
+    DateRecord.find_each do |dr|
       collect_for_date_record(dr)
     end
   end
@@ -11,10 +11,13 @@ class CollectPurchases < BaseService
 
   def collect_for_date_record(date_record)
     date_record.instrument_amounts.includes(:instrument).each do |ia|
+      prev_ia = ia.prev
+      next if prev_ia && prev_ia.absolute_count == ia.absolute_count
+
       date_record.purchases
         .find_or_initialize_by(instrument: ia.instrument).tap do |purchase|
-        purchase.count = ia.count - (ia.prev&.count || 0)
-        purchase.price = ia.price
+        purchase.count = ia.absolute_count - (prev_ia&.absolute_count || 0)
+        purchase.price = ia.absolute_price
         purchase.save
       end
     end
