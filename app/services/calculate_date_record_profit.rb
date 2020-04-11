@@ -49,12 +49,7 @@ class CalculateDateRecordProfit < BaseService
   end
 
   def convert(price, date_record)
-    if price.currency.to_s == currency
-      price
-    else
-      rate = date_record.exchange_rate.rate(price.currency.to_s)
-      Money.new(price.cents * rate.to_f, currency)
-    end
+    date_record.exchange_rate.convert(price, currency)
   end
 
   def make_money(value)

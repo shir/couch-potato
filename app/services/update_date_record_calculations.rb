@@ -8,10 +8,8 @@ class UpdateDateRecordCalculations < BaseService
   end
 
   def perform
-    date_record.total_amounts['RUB'] =
-      CalculateDateRecordTotal.perform(date_record, 'RUB').to_f.round(2)
-    date_record.profits['RUB'] =
-      CalculateDateRecordProfit.perform(date_record, 'RUB').to_f.round(2)
+    date_record.recalculate_total_amounts
+    date_record.recalculate_profits
     date_record.save!
   end
 end

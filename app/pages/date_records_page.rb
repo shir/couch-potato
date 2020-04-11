@@ -31,12 +31,12 @@ class DateRecordsPage
     @accounts ||= Account.visible
   end
 
-  def total(date_record)
-    date_record.total_amount(DEFAULT_CURRENCY)
+  def total(date_record, currency)
+    date_record.total_amount(currency)
   end
 
-  def profit(date_record)
-    date_record.profit(DEFAULT_CURRENCY)
+  def profit(date_record, currency)
+    date_record.profit(currency)
   end
 
   def exchange_rate(date_record, currency)

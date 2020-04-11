@@ -57,11 +57,13 @@ class DateRecord < ApplicationRecord
 
   def recalculate_total_amounts
     total_amounts['RUB'] = CalculateDateRecordTotal.perform(self, 'RUB').to_f.round(2)
+    total_amounts['USD'] = CalculateDateRecordTotal.perform(self, 'USD').to_f.round(2)
     save
   end
 
   def recalculate_profits
     profits['RUB'] = CalculateDateRecordProfit.perform(self, 'RUB').to_f.round(2)
+    profits['USD'] = CalculateDateRecordProfit.perform(self, 'USD').to_f.round(2)
     save
   end
 end

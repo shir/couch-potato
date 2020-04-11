@@ -16,18 +16,13 @@ class CalculateDateRecordTotal < BaseService
 
   def total_balance
     date_record.balances.includes(:account).map do |balance|
-      if balance.currency == currency
-        balance.amount
-      else
-        rate = date_record.exchange_rate.rate(balance.currency)
-        Money.new(balance.amount.cents * rate.to_f, currency)
-      end
+      date_record.exchange_rate.convert(balance.amount, currency)
     end.sum
   end
 
   def total_instrument_amounts
     date_record.instrument_amounts.includes(:instrument).map do |amount|
-      price = instrument_price(amount)
+      price = date_record.exchange_rate.convert(amount.price, currency)
       price * amount.count
     end.sum
   end
