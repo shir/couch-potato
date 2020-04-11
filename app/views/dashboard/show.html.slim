@@ -3,17 +3,24 @@
     h1 Total amount
 .row.mb-2
   .col
-    = line_chart @total_chart.result, min: nil, thousands: ' ',
-      decimal: ',', suffix: ' ₽', height: '500px',
-        library: chart_rebalances_options(@total_chart)
+    = line_chart @total_chart.result('RUB'), min: nil, thousands: ' ',
+      decimal: ',', suffix: ' ₽', height: '300px',
+      library: chart_rebalances_options(@total_chart)
+
+    = line_chart @total_chart.result('USD'), min: nil, thousands: ' ',
+      decimal: ',', suffix: ' $', height: '300px',
+      library: chart_rebalances_options(@total_chart)
 
 .row.mb-2
   .col
     h1 Profit
 .row.mb-2
   .col
-    = line_chart @profit_chart.result, min: nil, thousands: ' ',
-      decimal: ',', suffix: ' ₽', height: '500px',
+    = line_chart @profit_chart.result('RUB'), min: nil, thousands: ' ',
+      decimal: ',', suffix: ' ₽', height: '300px',
+        library: chart_rebalances_options(@profit_chart)
+    = line_chart @profit_chart.result('USD'), min: nil, thousands: ' ',
+      decimal: ',', suffix: ' $', height: '300px',
         library: chart_rebalances_options(@profit_chart)
 
 .row.mb-2

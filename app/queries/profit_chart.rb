@@ -9,10 +9,12 @@ class ProfitChart < BaseQuery
     @start_date = start_date
   end
 
-  def result
+  def result(currency)
     @result ||= {}.tap do |data|
       collect_date_records_data(data)
     end
+
+    @result[currency]
   end
 
   def rebalances
@@ -25,8 +27,11 @@ class ProfitChart < BaseQuery
   private
 
   def collect_date_records_data(data)
+    data['RUB'] ||= {}
+    data['USD'] ||= {}
     DateRecord.order(date: :asc).each do |dr|
-      data[dr.date] = dr.profits[DEFAULT_CURRENCY] || 0
+      data['RUB'][dr.date] = dr.profits['RUB'] || 0
+      data['USD'][dr.date] = dr.profits['USD'] || 0
 
       if dr.rebalance?
         @rebalances ||= []
