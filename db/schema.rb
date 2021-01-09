@@ -63,6 +63,16 @@ ActiveRecord::Schema.define(version: 2020_04_04_145745) do
     t.index ["date_record_id"], name: "index_instrument_amounts_on_date_record_id"
   end
 
+  create_table "instrument_prices", force: :cascade do |t|
+    t.bigint "instrument_id", null: false
+    t.date "date", null: false
+    t.integer "price_cents", default: 0, null: false
+    t.string "price_currency", default: "USD", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["instrument_id", "date"], name: "index_instrument_prices_on_instrument_id_and_date", unique: true
+  end
+
   create_table "instruments", force: :cascade do |t|
     t.string "ticker", null: false
     t.datetime "created_at", null: false
