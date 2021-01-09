@@ -10,21 +10,28 @@ class ProfitChart < BaseQuery
   end
 
   def result(currency)
-    @result ||= {}.tap do |data|
-      collect_date_records_data(data)
-    end
+    build_result unless @result
 
     @result[currency]
   end
 
   def rebalances
     # if `@rebalances` are blank run `result` to build rebalances
-    result unless @rebalances
+    unless @rebalances
+      @rebalances ||= []
+      build_result
+    end
 
     @rebalances
   end
 
   private
+
+  def build_result
+    @result = {}.tap do |data|
+      collect_date_records_data(data)
+    end
+  end
 
   def collect_date_records_data(data)
     data['RUB'] ||= {}
