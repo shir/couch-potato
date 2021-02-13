@@ -33,9 +33,10 @@ class InstrumentPricesChart < BaseQuery
 
   def amounts(instrument)
     amounts = instrument.amounts
+      .select(%(DISTINCT ON (month) date_trunc('month', "date_records"."date") as month, "instrument_amounts".*))
       .joins(:date_record)
       .preload(:date_record)
-      .order(Arel.sql('"date_records"."date" ASC'))
+      .order(Arel.sql('month DESC, "date_records"."date" DESC'))
     amounts = amounts.where('"date_records"."date" >= ?', start_date) if start_date.present?
     amounts
   end

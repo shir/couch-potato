@@ -36,7 +36,7 @@ class ProfitChart < BaseQuery
   def collect_date_records_data(data)
     data['RUB'] ||= {}
     data['USD'] ||= {}
-    DateRecord.order(date: :asc).each do |dr|
+    date_records.each do |dr|
       data['RUB'][dr.date] = dr.profits['RUB'] || 0
       data['USD'][dr.date] = dr.profits['USD'] || 0
 
@@ -45,5 +45,11 @@ class ProfitChart < BaseQuery
         @rebalances << dr.date
       end
     end
+  end
+
+  def date_records
+    DateRecord
+      .select(%(DISTINCT ON (month) date_trunc('month', date) as month, date_records.*))
+      .order('month DESC, date DESC')
   end
 end
