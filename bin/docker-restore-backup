@@ -1,0 +1,13 @@
+#!/bin/sh
+
+source .env
+
+DB_CONTAINER=couch-potato-db
+DB_PATH=/var/lib/postgresql/data
+DUMPFILE=latest.dump
+
+PGUSER="${POSTGRES_USER}"
+PGPASSWORD="${POSTGRES_PASSWORD}"
+
+docker cp ${DUMPFILE} ${DB_CONTAINER}:${DB_PATH}/
+docker exec ${DB_CONTAINER} pg_restore --verbose --clean --no-acl --no-owner -h localhost -d "${POSTGRES_USER}" ${DB_PATH}/${DUMPFILE}

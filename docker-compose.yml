@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   app:
+    container_name: couch-potato-app
     build:
       context: .
       dockerfile: Dockerfile
@@ -20,6 +21,7 @@ services:
 
   db:
     image: postgres:13-alpine
+    container_name: couch-potato-db
     env_file: .env
     volumes:
       - db_data:/var/lib/postgresql/data
