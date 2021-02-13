@@ -22,7 +22,7 @@ class InstrumentPricesChart < BaseQuery
 
   def data(instrument)
     amounts = amounts(instrument)
-    first_amount = amounts.to_a.first
+    first_amount = amounts.to_a.last
     base = Money.from_amount(BASE, instrument.currency).to_f
     amounts.to_a.each_with_object({}) do |amount, d|
       next if amount.count.zero?
