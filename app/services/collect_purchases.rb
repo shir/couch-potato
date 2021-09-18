@@ -1,7 +1,20 @@
 # frozen_string_literal: true
 
 class CollectPurchases < BaseService
+  attr_reader :force
+
+  def initialize(force: false)
+    @force = force
+  end
+
   def perform
+    if force
+      # If SPLIT was added then we have to recalculate all purchases
+      # for that insrumet
+      puts 'Force recalculating purchases'
+      Purchase.destroy_all
+    end
+
     DateRecord.find_each do |dr|
       collect_for_date_record(dr)
     end

@@ -1,7 +1,9 @@
 class BaseService
-  class << self
-    def perform(*args)
-      new(*args).perform
-    end
+  def self.perform(*args)
+    new(*args).perform
+  end
+
+  def perform
+    raise NotImplementedError
   end
 end
