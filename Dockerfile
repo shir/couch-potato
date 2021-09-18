@@ -23,6 +23,7 @@ RUN apk add --update --no-cache \
     pkgconfig \
     postgresql-dev \
     tzdata \
+    shared-mime-info \
     yarn
 RUN gem install bundler -v 2.0.2
 WORKDIR /app

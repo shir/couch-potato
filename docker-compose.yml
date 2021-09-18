@@ -17,7 +17,7 @@ services:
     env_file: .env
     environment:
       RAILS_ENV: development
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_USER}"
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}"
 
   db:
     image: postgres:13-alpine
