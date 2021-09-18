@@ -23,7 +23,7 @@ class InstrumentAmount < ApplicationRecord
       date:   Date.parse('2018-12-14'),
     },
     'FXDE' => {
-      divide: 10,
+      divide: 100,
       date:   Date.parse('2021-09-09'),
     },
   }.freeze
