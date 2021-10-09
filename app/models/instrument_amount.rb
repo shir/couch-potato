@@ -26,6 +26,14 @@ class InstrumentAmount < ApplicationRecord
       divide: 100,
       date:   Date.parse('2021-09-09'),
     },
+    'FXRL' => {
+      divide: 100,
+      date:   Date.parse('2021-10-07'),
+    },
+    'FXRB' => {
+      divide: 100,
+      date:   Date.parse('2021-10-07'),
+    },
   }.freeze
 
   belongs_to :date_record, inverse_of: :instrument_amounts
