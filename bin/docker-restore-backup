@@ -11,3 +11,4 @@ PGPASSWORD="${POSTGRES_PASSWORD}"
 
 docker cp ${DUMPFILE} ${DB_CONTAINER}:${DB_PATH}/
 docker exec ${DB_CONTAINER} pg_restore --verbose --clean --no-acl --no-owner -h localhost -d "${POSTGRES_DB}" ${DB_PATH}/${DUMPFILE}
+docker exec ${DB_CONTAINER} rm -rf ${DB_PATH}/${DUMPFILE}
